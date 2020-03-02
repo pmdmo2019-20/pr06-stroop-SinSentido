@@ -1,13 +1,20 @@
 package es.iessaladillo.pedrojoya.stroop.ui.game
 
+import android.graphics.Color
 import android.os.Handler
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import es.iessaladillo.pedrojoya.stroop.R
+import es.iessaladillo.pedrojoya.stroop.database.Game
+import es.iessaladillo.pedrojoya.stroop.database.GameDao
+import es.iessaladillo.pedrojoya.stroop.database.Player
+import es.iessaladillo.pedrojoya.stroop.database.PlayerDao
 import kotlin.concurrent.thread
 
 
-class GameViewModel(
-    // TODO
-) : ViewModel() {
+class GameViewModel(val navController: NavController, val playerDao: PlayerDao, val gameDao: GameDao) : ViewModel() {
 
     @Volatile
     private var isGameFinished: Boolean = false
@@ -17,30 +24,110 @@ class GameViewModel(
     private var millisUntilFinished: Int = 0
     private val handler: Handler = Handler()
 
-    // TODO
+    var gameModeName: String = ""
+    var minutes: Int = 0
+    lateinit var currentPlayer: Player
+
+    val wordList: List<String> = listOf("RED", "GREEN", "YELLOW", "BLUE")
+    val colorList: List<Int> = listOf(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE)
+
+    var currentColor: MutableLiveData<Int> = MutableLiveData(colorList.random())
+    val currentColorObserve: MutableLiveData<Int> get() = currentColor
+
+    var word: MutableLiveData<String> = MutableLiveData(wordList.random())
+    val wordObserve: LiveData<String> get() = word
+
+    var time: MutableLiveData<Int> = MutableLiveData(millisUntilFinished)
+    val timeObserve: LiveData<Int> get() = time
+
+    var words: MutableLiveData<Int> = MutableLiveData(0)
+    val wordsObserve: LiveData<Int> get() = words
+
+    var correctAnswers: MutableLiveData<Int> = MutableLiveData(0)
+    val correctAnswersObserve: LiveData<Int> get() = correctAnswers
+
+    var totalPoints: MutableLiveData<Int> = MutableLiveData(0)
+    val totalPointsObserve: LiveData<Int> get() = totalPoints
+
+    var totalAttempts: MutableLiveData<Int> = MutableLiveData(0)
+    val totalAttemptsOberve: LiveData<Int> get() = totalAttempts
+
+    var isFinished: MutableLiveData<Boolean> = MutableLiveData(isGameFinished)
+    val isFinishedObserve: LiveData<Boolean> get() = isFinished
 
     private fun onGameTimeTick(millisUntilFinished: Int) {
-        // TODO
+        time.value = millisUntilFinished
     }
 
     private fun onGameTimeFinish() {
         isGameFinished = true
-        // TODO
+        isFinished.value = true
+        inserteGameResult()
     }
 
     fun nextWord() {
-        // TODO
+        //Suma el contador de palabras
+        words.value = words.value?.plus(1)
+        //Cambia el valor de la palabra
+        word.value = wordList.random()
+        //Cambial el valor del color
+        currentColor.value = colorList.random()
     }
 
     fun checkRight() {
         currentWordMillis = 0
-        // TODO
+        if(isRightAnswer()){
+            correctAnswers.value = correctAnswers.value?.plus(1)
+            totalPoints.value = totalPoints.value?.plus(10)
+        }
+        else{
+            if(gameModeName == "Attempts"){
+                totalAttempts.value = totalAttempts.value?.minus(1)
+                if(totalAttempts.value == 0){
+                    onGameTimeFinish()
+                }
+            }
+        }
+        nextWord()
     }
 
     fun checkWrong() {
         currentWordMillis = 0
-        // TODO
+        if(!isRightAnswer()){
+            correctAnswers.value = correctAnswers.value?.plus(1)
+            totalPoints.value = totalPoints.value?.plus(10)
+        }
+        else{
+            if(gameModeName == "Attempts"){
+                totalAttempts.value = totalAttempts.value?.minus(1)
+                if(totalAttempts.value == 0){
+                    onGameTimeFinish()
+                }
+            }
+        }
+        nextWord()
     }
+
+    private fun isRightAnswer(): Boolean{
+        return wordList.indexOf(word.value) == colorList.indexOf(currentColor.value)
+    }
+
+    private fun inserteGameResult(){
+        thread {
+            gameDao.insertGame(Game(0, currentPlayer, gameModeName, minutes, words.value!!,
+                correctAnswers.value!!
+            ))
+        }
+    }
+
+    fun setPlayer(playerId: Int){
+        currentPlayer = playerDao.queryPlayerById(playerId)
+    }
+
+    fun queryLastGame(): Game{
+        return gameDao.queryLastGame()
+    }
+
 
     fun startGameThread(gameTime: Int, wordTime: Int) {
         millisUntilFinished = gameTime
@@ -71,6 +158,7 @@ class GameViewModel(
             }
         }
     }
+
 
     override fun onCleared() {
         super.onCleared()
