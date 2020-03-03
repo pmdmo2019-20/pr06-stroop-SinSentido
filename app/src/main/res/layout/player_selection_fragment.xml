@@ -93,4 +93,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <ImageView
+        android:id="@+id/imgNoPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tint="@color/playerOption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playerSelectionHeader"
+        app:srcCompat="@drawable/ic_player_add_black_48dp" />
+
+    <TextView
+        android:id="@+id/lblNoPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_selection_no_players_yet"
+        android:textColor="@color/playerOption"
+        app:layout_constraintEnd_toEndOf="@+id/imgNoPlayer"
+        app:layout_constraintStart_toStartOf="@+id/imgNoPlayer"
+        app:layout_constraintTop_toBottomOf="@+id/imgNoPlayer" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

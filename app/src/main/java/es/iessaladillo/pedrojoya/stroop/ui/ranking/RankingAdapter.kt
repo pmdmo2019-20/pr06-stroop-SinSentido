@@ -14,9 +14,6 @@ class RankingAdapter: RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
     lateinit var listData: List<GamePlayer>
     private var onItemClickListener: RankingAdapter.OnItemClickListener? = null
 
-    init {
-        setHasStableIds(true);
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

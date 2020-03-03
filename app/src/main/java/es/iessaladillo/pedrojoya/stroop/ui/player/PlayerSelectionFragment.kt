@@ -58,9 +58,20 @@ class PlayerSelectionFragment : Fragment(R.layout.player_selection_fragment), Pl
     }
 
     private fun submitData() {
+        noPlayersYet(viewModel.returnAllPlayers())
         listAdapter.submitData(viewModel.returnAllPlayers())
     }
 
+    private fun noPlayersYet(list: List<Player>){
+        if(list.size > 0){
+            imgNoPlayer.isVisible = false
+            lblNoPlayer.isVisible = false
+        }
+        else{
+            imgNoPlayer.isVisible = true
+            lblNoPlayer.isVisible = true
+        }
+    }
 
     private fun setupToolbar() {
         (requireActivity() as OnToolbarAvailableListener).onToolbarCreated(toolbar)
@@ -105,5 +116,7 @@ class PlayerSelectionFragment : Fragment(R.layout.player_selection_fragment), Pl
         settings.edit{
             putInt(getString(R.string.selected_player_key), player.userId)
         }
+
+        btnEditPlayer.isVisible = true
     }
 }
