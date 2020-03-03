@@ -46,7 +46,6 @@
             android:icon="@drawable/ic_attempts_black_24dp"
             android:key="@string/prefAttempts_key"
             android:title="@string/prefAttempts_title" />
-
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
@@ -62,9 +61,5 @@
             android:icon="@drawable/ic_filter_list_black_24dp"
             android:key="@string/prefRankingFilter_key"
             android:title="@string/prefRankingFilter_title" />
-
     </androidx.preference.PreferenceCategory>
-
-
-
 </PreferenceScreen>

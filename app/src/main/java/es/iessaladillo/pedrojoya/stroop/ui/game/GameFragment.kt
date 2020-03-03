@@ -49,8 +49,8 @@ class GameFragment : Fragment(R.layout.game_fragment) {
         gameModeName = settings.getString(getString(R.string.prefGameMode_key), getString(R.string.prefGameMode_defaultValue))!!
         wordTime = settings.getString(getString(R.string.prefWordTime_key), getString(R.string.prefWordTime_defaultValue))!!
 
-        observers()
         setupGame()
+        observers()
         setupButtons()
     }
 

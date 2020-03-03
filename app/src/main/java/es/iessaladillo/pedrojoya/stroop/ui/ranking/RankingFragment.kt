@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AdapterView
 import androidx.core.content.edit
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -49,18 +50,22 @@ class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnIt
     private fun setupViews(view: View){
         setupToolbar()
         setupRecyclerView()
-        submitData()
         setupSpinner()
+        spinnerDefault()
+        submitData()
     }
 
     private fun submitData(){
         if(spnGameMode.selectedItem == "All"){
+            checkEmptyList(viewModel.queryAllGames())
             listAdapter.submitData(viewModel.queryAllGames())
         }
         else if(spnGameMode.selectedItem == "Attempts"){
+            checkEmptyList(viewModel.queryAttemptsGames())
             listAdapter.submitData(viewModel.queryAttemptsGames())
         }
         else if(spnGameMode.selectedItem == "Time"){
+            checkEmptyList(viewModel.queryTimeGames())
             listAdapter.submitData(viewModel.queryTimeGames())
         }
     }
@@ -78,8 +83,7 @@ class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnIt
 
     private fun setupSpinner(){
         spnGameMode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -89,7 +93,6 @@ class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnIt
             ) {
                 submitData()
             }
-
         }
     }
 
@@ -114,5 +117,30 @@ class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnIt
             putInt(getString(R.string.current_game_key), gamePlayer.gameId)
         }
         navController.navigate(R.id.resultDestination)
+    }
+
+    private fun spinnerDefault(){
+        var value: String = settings.getString(getString(R.string.prefRankingFilter_key), getString(R.string.prefRankingFilter_defaultValue))!!
+
+        if(value == "All"){
+            spnGameMode.setSelection(0)
+        }
+        else if(value == "Time"){
+            spnGameMode.setSelection(1)
+        }
+        else{
+            spnGameMode.setSelection(2)
+        }
+    }
+
+    private fun checkEmptyList(list: List<GamePlayer>){
+        if (list.size > 0){
+            imgNoGamesYet.isVisible = false
+            lblNoGamesYet.isVisible = false
+        }
+        else{
+            imgNoGamesYet.isVisible = true
+            lblNoGamesYet.isVisible = true
+        }
     }
 }

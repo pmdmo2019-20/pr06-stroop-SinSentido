@@ -111,13 +111,10 @@ class PlayerEditFragment : Fragment(R.layout.player_edit_fragment), PlayerEditAd
                     putInt(getString(R.string.selected_player_key), 0)
                 }
                 viewModel.deletePlayer(viewModel.queryPlayerById(playerId))
+                activity!!.onBackPressed()
             }
-            .setNegativeButton(R.string.player_deletion_no){_, _ ->
-
-            }
+            .setNegativeButton(R.string.player_deletion_no){_, _ -> }
             .create()
-
-
         dialog.show()
     }
 

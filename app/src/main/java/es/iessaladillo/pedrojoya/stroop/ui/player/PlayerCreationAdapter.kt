@@ -40,7 +40,6 @@ class PlayerCreationAdapter: RecyclerView.Adapter<ViewHolder>() {
 
 
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-
         val imgAvatar: ImageView = itemView.findViewById(R.id.imgAvatar)
 
         init {
