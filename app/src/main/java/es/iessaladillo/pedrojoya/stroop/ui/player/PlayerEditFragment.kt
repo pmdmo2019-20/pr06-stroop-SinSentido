@@ -1,5 +1,7 @@
 package es.iessaladillo.pedrojoya.stroop.ui.player
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,6 +18,7 @@ import es.iessaladillo.pedrojoya.stroop.R
 import es.iessaladillo.pedrojoya.stroop.base.OnToolbarAvailableListener
 import es.iessaladillo.pedrojoya.stroop.database.AppDatabase
 import es.iessaladillo.pedrojoya.stroop.database.Player
+import kotlinx.android.synthetic.main.dashboard_fragment.*
 import kotlinx.android.synthetic.main.player_creation_fragment.*
 import kotlinx.android.synthetic.main.player_creation_fragment.fabCreatePlayer
 import kotlinx.android.synthetic.main.player_creation_fragment.toolbar
@@ -68,6 +71,13 @@ class PlayerEditFragment : Fragment(R.layout.player_edit_fragment), PlayerEditAd
 
     private fun setupToolbar() {
         (requireActivity() as OnToolbarAvailableListener).onToolbarCreated(toolbar)
+        toolbar.inflateMenu(R.menu.main_activity)
+        toolbar.setOnMenuItemClickListener{
+            when (it.itemId) {
+                R.id.mnuHelp -> { showDialod() }
+            }
+            true
+        }
     }
 
     private fun checkForPlayer(){
@@ -78,6 +88,15 @@ class PlayerEditFragment : Fragment(R.layout.player_edit_fragment), PlayerEditAd
             imgAvatarEdit.setImageDrawable(resources.getDrawable(avatarId))
             txtNicknameEdit.setText(viewModel.queryPlayerById(playerId).nickname)
         }
+    }
+
+    private fun showDialod(){
+        val dialog: Dialog = AlertDialog.Builder(context)
+            .setTitle(getString(R.string.player_edition_title))
+            .setMessage(getString(R.string.player_edition_help_description))
+            .create()
+
+        dialog.show()
     }
 
     override fun onClick(position: Int) {

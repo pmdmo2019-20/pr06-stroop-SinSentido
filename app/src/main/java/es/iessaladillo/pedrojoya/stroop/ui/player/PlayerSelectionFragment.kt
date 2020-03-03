@@ -1,5 +1,7 @@
 package es.iessaladillo.pedrojoya.stroop.ui.player
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -62,6 +64,13 @@ class PlayerSelectionFragment : Fragment(R.layout.player_selection_fragment), Pl
 
     private fun setupToolbar() {
         (requireActivity() as OnToolbarAvailableListener).onToolbarCreated(toolbar)
+        toolbar.inflateMenu(R.menu.main_activity)
+        toolbar.setOnMenuItemClickListener{
+            when (it.itemId) {
+                R.id.mnuHelp -> { showDialod() }
+            }
+            true
+        }
     }
 
     private fun setupRecyclerView(){
@@ -79,6 +88,15 @@ class PlayerSelectionFragment : Fragment(R.layout.player_selection_fragment), Pl
             imgPlayerSelected.setImageDrawable(resources.getDrawable(viewModel.queryPlayerById(playerId).avatarId))
             lblPlayerSelected.setText(viewModel.queryPlayerById(playerId).nickname)
         }
+    }
+
+    private fun showDialod(){
+        val dialog: Dialog = AlertDialog.Builder(context)
+            .setTitle(getString(R.string.player_selection_title))
+            .setMessage(getString(R.string.player_selection_help_description))
+            .create()
+
+        dialog.show()
     }
 
     override fun onClick(player: Player) {

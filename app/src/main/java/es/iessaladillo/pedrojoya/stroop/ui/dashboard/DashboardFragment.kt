@@ -1,11 +1,16 @@
 package es.iessaladillo.pedrojoya.stroop.ui.dashboard
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.cardview.widget.CardView
 import androidx.core.content.edit
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -49,6 +54,7 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
         checkForPlayer()
     }
 
+
     private fun setupNavigationButtons() {
         playCV.setOnClickListener{ navigateToPlay() }
         rankingCV.setOnClickListener{ navController.navigate(R.id.rankingDestination) }
@@ -71,6 +77,13 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
 
     private fun setupToolbar() {
         (requireActivity() as OnToolbarAvailableListener).onToolbarCreated(toolbar)
+        toolbar.inflateMenu(R.menu.main_activity)
+        toolbar.setOnMenuItemClickListener{
+            when (it.itemId) {
+                R.id.mnuHelp -> { showDialod() }
+            }
+            true
+        }
     }
 
     private fun showTutorial(){
@@ -82,6 +95,15 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
             }
             navController.navigate(R.id.assistantDestination)
         }
+    }
+
+    private fun showDialod(){
+        val dialog: Dialog = AlertDialog.Builder(context)
+            .setTitle(getString(R.string.dashboard_title))
+            .setMessage(getString(R.string.dashboard_help_description))
+            .create()
+
+        dialog.show()
     }
 
     private fun checkForPlayer(){
