@@ -1,5 +1,6 @@
 package es.iessaladillo.pedrojoya.stroop.ui.ranking
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +9,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Spinner
+import androidx.core.content.edit
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import es.iessaladillo.pedrojoya.stroop.R
 import es.iessaladillo.pedrojoya.stroop.base.OnToolbarAvailableListener
 import es.iessaladillo.pedrojoya.stroop.database.AppDatabase
+import es.iessaladillo.pedrojoya.stroop.database.Game
 import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerSelectionAdapter
 import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerViewModel
 import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerViewModelFactory
@@ -24,13 +30,22 @@ import kotlinx.android.synthetic.main.dashboard_fragment.toolbar
 import kotlinx.android.synthetic.main.player_selection_fragment.*
 import kotlinx.android.synthetic.main.ranking_fragment.*
 
-class RankingFragment : Fragment(R.layout.ranking_fragment) {
-
-    val listAdapter: RankingAdapter = RankingAdapter()
-
+class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnItemClickListener {
 
     private val viewModel: RankingViewModel by viewModels {
         RankingViewModelFactory(AppDatabase.getInstance(this.requireContext()).gameDao)
+    }
+
+    private val settings: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(activity)
+    }
+
+    private val navController: NavController by lazy{
+        findNavController()
+    }
+
+    val listAdapter: RankingAdapter = RankingAdapter().also {
+        it.setOnItemClickListener(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -47,13 +62,13 @@ class RankingFragment : Fragment(R.layout.ranking_fragment) {
 
     private fun submitData(){
         if(spnGameMode.selectedItem == "All"){
-            listAdapter.submitData(viewModel.gameList)
+            listAdapter.submitData(viewModel.queryAllGames())
         }
         else if(spnGameMode.selectedItem == "Attempts"){
-            listAdapter.submitData(viewModel.gameListAttemps)
+            listAdapter.submitData(viewModel.queryAttemptsGames())
         }
         else if(spnGameMode.selectedItem == "Time"){
-            listAdapter.submitData(viewModel.gameListTime)
+            listAdapter.submitData(viewModel.queryTimeGames())
         }
     }
 
@@ -83,5 +98,12 @@ class RankingFragment : Fragment(R.layout.ranking_fragment) {
         lstGames.layoutManager = LinearLayoutManager(context)
         lstGames.itemAnimator = DefaultItemAnimator()
         lstGames.adapter = listAdapter
+    }
+
+    override fun onClick(game: Game) {
+        settings.edit{
+            putInt(getString(R.string.current_game_key), game.gameId)
+        }
+        navController.navigate(R.id.resultDestination)
     }
 }

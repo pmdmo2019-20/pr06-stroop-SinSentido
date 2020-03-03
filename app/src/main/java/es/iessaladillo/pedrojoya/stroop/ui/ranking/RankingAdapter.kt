@@ -8,12 +8,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import es.iessaladillo.pedrojoya.stroop.R
 import es.iessaladillo.pedrojoya.stroop.database.Game
+import es.iessaladillo.pedrojoya.stroop.database.Player
 import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerSelectionAdapter
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.ranking_item.*
 
 class RankingAdapter: RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
 
     lateinit var listData: List<Game>
+    private var onItemClickListener: RankingAdapter.OnItemClickListener? = null
+
+    init {
+        setHasStableIds(true);
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -21,8 +28,13 @@ class RankingAdapter: RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
         return ViewHolder(itemView)
     }
 
+    fun setOnItemClickListener(listener: RankingAdapter.OnItemClickListener){
+        onItemClickListener = listener
+    }
+
     fun submitData(newData: List<Game>){
         listData = newData
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = listData.size
@@ -34,22 +46,22 @@ class RankingAdapter: RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
 
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        val imgRankingAvatar: ImageView = containerView.findViewById(R.id.imgRankingAvatar)
-        val lblRankingNickname: TextView = containerView.findViewById(R.id.lblRankingNickname)
-        val lblRankingGameMode: TextView = containerView.findViewById(R.id.lblRankingGamemode)
-        val lblRankingMinutes: TextView = containerView.findViewById(R.id.lblRankingMinutes)
-        val lblRankingWords: TextView = containerView.findViewById(R.id.lblRankingWords)
-        val lblRankingCorrectAnswers: TextView = containerView.findViewById(R.id.lblRankingCorrectAnswers)
-        val lblRankingPoints: TextView = containerView.findViewById(R.id.lblRankingPoints)
+        init {
+            containerView.setOnClickListener{ onItemClickListener?.onClick(listData[adapterPosition]) }
+        }
 
         fun bind(game: Game){
             imgRankingAvatar.setImageDrawable(containerView.resources.getDrawable(game.player.avatarId))
             lblRankingNickname.setText(game.player.nickname)
-            lblRankingGameMode.setText(containerView.resources.getString(R.string.ranking_item_gameMode, game.gameMode))
+            lblRankingGamemode.setText(containerView.resources.getString(R.string.ranking_item_gameMode, game.gameMode))
             lblRankingMinutes.setText(containerView.resources.getString(R.string.ranking_item_time, game.time))
             lblRankingWords.setText(containerView.resources.getString(R.string.ranking_item_words, game.words))
             lblRankingCorrectAnswers.setText(containerView.resources.getString(R.string.ranking_item_correct, game.correct))
             lblRankingPoints.setText(containerView.resources.getString(R.string.totalPoints, game.correct * 10))
         }
+    }
+
+    interface OnItemClickListener{
+        fun onClick(game: Game)
     }
 }

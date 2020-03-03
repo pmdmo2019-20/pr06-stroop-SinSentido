@@ -13,11 +13,11 @@ import androidx.preference.PreferenceManager
 
 import es.iessaladillo.pedrojoya.stroop.R
 import es.iessaladillo.pedrojoya.stroop.database.AppDatabase
+import es.iessaladillo.pedrojoya.stroop.database.Game
 import kotlinx.android.synthetic.main.game_fragment.*
+import kotlin.concurrent.thread
 
 class GameFragment : Fragment(R.layout.game_fragment) {
-
-    var gameId: Int = 0
 
     private val settings: SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(activity)
@@ -31,23 +31,30 @@ class GameFragment : Fragment(R.layout.game_fragment) {
         GameViewModelFactory(navController, AppDatabase.getInstance(this.requireContext()).playerDao, AppDatabase.getInstance(this.requireContext()).gameDao)
     }
 
+    var gameId: Int = 0
+    var playerId: Int = 0
+    var time: String = ""
+    var gameModeName: String = ""
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupViews(requireView())
     }
 
     private fun setupViews(view: View){
+        playerId = settings.getInt(getString(R.string.selected_player_key), 0)
+        time = settings.getString(getString(R.string.prefGameTime_key), R.string.prefGameTime_defaultValue.toString())!!
+        gameModeName = settings.getString(getString(R.string.prefGameMode_key), R.string.prefGameMode_defaultValue.toString())!!
+
         setupGame()
         observers()
         setupButtons()
     }
 
     private fun observers(){
-        var gameModeName: String = settings.getString(getString(R.string.prefGameMode_key), R.string.prefGameMode_defaultValue.toString())!!
-
         viewModel.run{
             //Observar el tiempo restante
-            timeObserve.observe(viewLifecycleOwner){
+            timeLeftObserve.observe(viewLifecycleOwner){
                 progressBar.progress = it
             }
             //Observar el numero de palabras mostradas
@@ -80,9 +87,18 @@ class GameFragment : Fragment(R.layout.game_fragment) {
             }
             isFinishedObserve.observe(viewLifecycleOwner){
                 if(isFinishedObserve.value!!){
-                    gameId = viewModel.queryLastGame().gameId
-                    settings.edit{
-                        putInt(getString(R.string.current_game_key), gameId)
+                    thread {
+                        viewModel.insertGame(Game(0,
+                            viewModel.queryPlayerById(playerId),
+                            gameModeName,
+                            time.toInt(),
+                            wordsObserve.value!!,
+                            correctAnswersObserve.value!!
+                        ))
+                        gameId = viewModel.queryLastGame().gameId
+                        settings.edit{
+                            putInt(getString(R.string.current_game_key), gameId)
+                        }
                     }
                     navController.navigate(R.id.action_gameDestination_to_resultDestination)
                 }
@@ -93,13 +109,10 @@ class GameFragment : Fragment(R.layout.game_fragment) {
 
     private fun setupGame(){
         gameMode()
-        var time: String = settings.getString(getString(R.string.prefGameTime_key), R.string.prefGameTime_defaultValue.toString())!!
-        var wordTime: String = settings.getString(getString(R.string.prefWordTime_key), R.string.prefWordTime_defaultValue.toString())!!
-        var playerId: Int = settings.getInt(getString(R.string.selected_player_key), 0)
 
-        viewModel.setPlayer(playerId)
+        var wordTime: String = settings.getString(getString(R.string.prefWordTime_key), R.string.prefWordTime_defaultValue.toString())!!
+
         progressBar.max = time.toInt()
-        viewModel.minutes = (time.toInt()/1000) / 60
         viewModel.startGameThread(time.toInt(), wordTime.toInt())
     }
 

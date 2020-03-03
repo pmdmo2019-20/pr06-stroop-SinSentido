@@ -69,20 +69,20 @@ class PlayerSelectionFragment : Fragment(R.layout.player_selection_fragment), Pl
         lstPlayers.adapter = listAdapter
     }
 
-    override fun onClick(player: Player) {
-        imgPlayerSelected.setImageDrawable(resources.getDrawable(player.avatarId))
-        lblPlayerSelected.setText(player.nickname)
-        settings.edit{
-            putInt(getString(R.string.selected_player_key), player.userId)
-        }
-    }
-
     private fun checkForPlayer(){
         playerId = settings.getInt(getString(R.string.selected_player_key), 0)
 
         if(playerId != 0) {
             imgPlayerSelected.setImageDrawable(resources.getDrawable(viewModel.queryPlayerById(playerId).avatarId))
             lblPlayerSelected.setText(viewModel.queryPlayerById(playerId).nickname)
+        }
+    }
+
+    override fun onClick(player: Player) {
+        imgPlayerSelected.setImageDrawable(resources.getDrawable(player.avatarId))
+        lblPlayerSelected.setText(player.nickname)
+        settings.edit{
+            putInt(getString(R.string.selected_player_key), player.userId)
         }
     }
 }

@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import es.iessaladillo.pedrojoya.stroop.R
 import es.iessaladillo.pedrojoya.stroop.database.Game
 import es.iessaladillo.pedrojoya.stroop.database.GameDao
 import es.iessaladillo.pedrojoya.stroop.database.Player
@@ -25,8 +24,6 @@ class GameViewModel(val navController: NavController, val playerDao: PlayerDao, 
     private val handler: Handler = Handler()
 
     var gameModeName: String = ""
-    var minutes: Int = 0
-    lateinit var currentPlayer: Player
 
     val wordList: List<String> = listOf("RED", "GREEN", "YELLOW", "BLUE")
     val colorList: List<Int> = listOf(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE)
@@ -37,8 +34,8 @@ class GameViewModel(val navController: NavController, val playerDao: PlayerDao, 
     var word: MutableLiveData<String> = MutableLiveData(wordList.random())
     val wordObserve: LiveData<String> get() = word
 
-    var time: MutableLiveData<Int> = MutableLiveData(millisUntilFinished)
-    val timeObserve: LiveData<Int> get() = time
+    var timeLeft: MutableLiveData<Int> = MutableLiveData(millisUntilFinished)
+    val timeLeftObserve: LiveData<Int> get() = timeLeft
 
     var words: MutableLiveData<Int> = MutableLiveData(0)
     val wordsObserve: LiveData<Int> get() = words
@@ -56,21 +53,20 @@ class GameViewModel(val navController: NavController, val playerDao: PlayerDao, 
     val isFinishedObserve: LiveData<Boolean> get() = isFinished
 
     private fun onGameTimeTick(millisUntilFinished: Int) {
-        time.value = millisUntilFinished
+        timeLeft.value = millisUntilFinished
     }
 
     private fun onGameTimeFinish() {
         isGameFinished = true
         isFinished.value = true
-        inserteGameResult()
     }
 
     fun nextWord() {
-        //Suma el contador de palabras
+        //Increments the words counter
         words.value = words.value?.plus(1)
-        //Cambia el valor de la palabra
+        //Changes word value
         word.value = wordList.random()
-        //Cambial el valor del color
+        //Changes color value
         currentColor.value = colorList.random()
     }
 
@@ -112,16 +108,13 @@ class GameViewModel(val navController: NavController, val playerDao: PlayerDao, 
         return wordList.indexOf(word.value) == colorList.indexOf(currentColor.value)
     }
 
-    private fun inserteGameResult(){
-        thread {
-            gameDao.insertGame(Game(0, currentPlayer, gameModeName, minutes, words.value!!,
-                correctAnswers.value!!
-            ))
-        }
+
+    fun queryPlayerById(playerId: Int): Player{
+        return playerDao.queryPlayerById(playerId)
     }
 
-    fun setPlayer(playerId: Int){
-        currentPlayer = playerDao.queryPlayerById(playerId)
+    fun insertGame(game: Game){
+        gameDao.insertGame(game)
     }
 
     fun queryLastGame(): Game{
