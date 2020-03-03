@@ -39,4 +39,8 @@ class PlayerViewModel(val playerDao: PlayerDao): ViewModel() {
     fun updatePlayer(player: Player){
         playerDao.updatePlayer(player)
     }
+
+    fun deletePlayer(player: Player){
+        playerDao.deletePlayer(player)
+    }
 }

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.edit
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
@@ -72,10 +73,11 @@ class PlayerEditFragment : Fragment(R.layout.player_edit_fragment), PlayerEditAd
 
     private fun setupToolbar() {
         (requireActivity() as OnToolbarAvailableListener).onToolbarCreated(toolbar)
-        toolbar.inflateMenu(R.menu.main_activity)
+        toolbar.inflateMenu(R.menu.player_edit_menu)
         toolbar.setOnMenuItemClickListener{
             when (it.itemId) {
                 R.id.mnuHelp -> { showDialod() }
+                R.id.mnuDelete -> { showDeleteDialog() }
             }
             true
         }
@@ -96,6 +98,25 @@ class PlayerEditFragment : Fragment(R.layout.player_edit_fragment), PlayerEditAd
             .setTitle(getString(R.string.player_edition_title))
             .setMessage(getString(R.string.player_edition_help_description))
             .create()
+
+        dialog.show()
+    }
+
+    private fun showDeleteDialog(){
+        val dialog: Dialog = AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.player_deletion_title))
+            .setMessage(getString(R.string.player_deletion_message))
+            .setPositiveButton(R.string.player_deletion_yes){ _, _ ->
+                settings.edit{
+                    putInt(getString(R.string.selected_player_key), 0)
+                }
+                viewModel.deletePlayer(viewModel.queryPlayerById(playerId))
+            }
+            .setNegativeButton(R.string.player_deletion_no){_, _ ->
+
+            }
+            .create()
+
 
         dialog.show()
     }

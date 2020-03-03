@@ -88,25 +88,24 @@ class GameFragment : Fragment(R.layout.game_fragment) {
                     lblTotalPoints.setText(totalAttemptsOberve.value.toString())
                 }
             }
-            isFinishedObserve.observe(viewLifecycleOwner){
-                if(isFinishedObserve.value!!){
+            isFinishedObserve.observe(viewLifecycleOwner) {
+                if (isFinishedObserve.value!!) {
                     thread {
-                        viewModel.insertGame(Game(0,
+                        viewModel.insertGame(
                             playerId,
                             gameModeName,
                             time.toInt(),
                             wordsObserve.value!!,
                             correctAnswersObserve.value!!
-                        ))
+                        )
                         gameId = viewModel.queryLastGame().gameId
-                        settings.edit{
+                        settings.edit {
                             putInt(getString(R.string.current_game_key), gameId)
                         }
                     }
                     navController.navigate(R.id.action_gameDestination_to_resultDestination)
                 }
             }
-
         }
     }
 

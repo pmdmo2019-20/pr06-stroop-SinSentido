@@ -47,13 +47,13 @@ class RankingAdapter: RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
         }
 
         fun bind(gamePlayer: GamePlayer){
-            imgRankingAvatar.setImageDrawable(containerView.resources.getDrawable(gamePlayer.player.avatarId))
-            lblRankingNickname.setText(gamePlayer.player.nickname)
-            lblRankingGamemode.setText(containerView.resources.getString(R.string.ranking_item_gameMode, gamePlayer.game.gameMode))
-            lblRankingMinutes.setText(containerView.resources.getString(R.string.ranking_item_time, gamePlayer.game.time))
-            lblRankingWords.setText(containerView.resources.getString(R.string.ranking_item_words, gamePlayer.game.words))
-            lblRankingCorrectAnswers.setText(containerView.resources.getString(R.string.ranking_item_correct, gamePlayer.game.correct))
-            lblRankingPoints.setText(containerView.resources.getString(R.string.totalPoints, gamePlayer.game.correct * 10))
+            imgRankingAvatar.setImageDrawable(containerView.resources.getDrawable(gamePlayer.avatarId))
+            lblRankingNickname.setText(gamePlayer.nickname)
+            lblRankingGamemode.setText(containerView.resources.getString(R.string.ranking_item_gameMode, gamePlayer.gameMode))
+            lblRankingMinutes.setText(containerView.resources.getString(R.string.ranking_item_time, gamePlayer.time))
+            lblRankingWords.setText(containerView.resources.getString(R.string.ranking_item_words, gamePlayer.words))
+            lblRankingCorrectAnswers.setText(containerView.resources.getString(R.string.ranking_item_correct, gamePlayer.correct))
+            lblRankingPoints.setText(containerView.resources.getString(R.string.totalPoints, gamePlayer.correct * 10))
         }
     }
 

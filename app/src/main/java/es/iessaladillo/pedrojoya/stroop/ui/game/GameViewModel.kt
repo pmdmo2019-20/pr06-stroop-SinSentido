@@ -113,8 +113,8 @@ class GameViewModel(val navController: NavController, val playerDao: PlayerDao, 
         return playerDao.queryPlayerById(playerId)
     }
 
-    fun insertGame(game: Game){
-        gameDao.insertGame(game)
+    fun insertGame(playerId: Int, gameMode: String, time: Int, words: Int, correct: Int){
+        gameDao.insertGame(Game(0, playerId, gameMode, time, words, correct))
     }
 
     fun queryLastGame(): Game{

@@ -45,10 +45,10 @@ class ResultFragment : Fragment(R.layout.result_fragment) {
         gameId = settings.getInt(getString(R.string.current_game_key), 0)
         var gamePlayer: GamePlayer = viewModel.queryGameByIdWithPlayer(gameId)
 
-        imgHeaderAvatar.setImageDrawable(resources.getDrawable(gamePlayer.player.avatarId))
-        lblHeaderNickname.setText(gamePlayer.player.nickname)
-        lblCorrectAnswers.setText(gamePlayer.game.correct.toString())
-        lblIncorrectAnswers.setText((gamePlayer.game.words - gamePlayer.game.correct).toString())
-        lblGamePoints.setText((gamePlayer.game.correct*10).toString())
+        imgHeaderAvatar.setImageDrawable(resources.getDrawable(gamePlayer.avatarId))
+        lblHeaderNickname.setText(gamePlayer.nickname)
+        lblCorrectAnswers.setText(gamePlayer.correct.toString())
+        lblIncorrectAnswers.setText((gamePlayer.words - gamePlayer.correct).toString())
+        lblGamePoints.setText((gamePlayer.correct*10).toString())
     }
 }

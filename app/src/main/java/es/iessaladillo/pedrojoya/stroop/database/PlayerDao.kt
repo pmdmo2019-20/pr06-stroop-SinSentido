@@ -1,10 +1,7 @@
 package es.iessaladillo.pedrojoya.stroop.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface PlayerDao {
@@ -19,4 +16,7 @@ interface PlayerDao {
 
     @Update
     fun updatePlayer(player: Player)
+
+    @Delete
+    fun deletePlayer(player: Player)
 }

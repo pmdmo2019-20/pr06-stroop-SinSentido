@@ -12,7 +12,7 @@ interface GameDao {
     @Query("SELECT * FROM game")
     fun queryAllGames(): List<Game>
 
-    @Query("SELECT * FROM game JOIN player ON game.playerId = player.userId")
+    @Query("SELECT game.gameId, game.playerId, game.gameMode, game.time, game.words, game.correct, player.userId, player.nickname, player.avatarId FROM game, player WHERE game.playerId = player.userId")
     fun queryAllGamesWithPlayer(): List<GamePlayer>
 
     @Query("SELECT * FROM game JOIN player ON game.playerId = player.userId WHERE gameMode LIKE 'Attempts'")

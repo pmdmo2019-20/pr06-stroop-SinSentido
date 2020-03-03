@@ -111,7 +111,7 @@ class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnIt
 
     override fun onClick(gamePlayer: GamePlayer) {
         settings.edit{
-            putInt(getString(R.string.current_game_key), gamePlayer.game.gameId)
+            putInt(getString(R.string.current_game_key), gamePlayer.gameId)
         }
         navController.navigate(R.id.resultDestination)
     }

@@ -4,11 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class GamePlayer (
-    @Embedded
-    val player: Player,
-    @Relation(
-        parentColumn = "userId",
-        entityColumn = "playerId"
-    )
-    val game: Game
+    val gameId: Int,
+    val playerId: Int,
+    var gameMode: String,
+    var time: Int,
+    var words: Int,
+    var correct: Int,
+    val userId: Int,
+    var nickname: String,
+    var avatarId: Int
 )
