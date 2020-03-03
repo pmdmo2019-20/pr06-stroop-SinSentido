@@ -54,8 +54,8 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
         checkForPlayer()
     }
 
-
     private fun setupNavigationButtons() {
+        imgDashboardAvatar.setOnClickListener{ navController.navigate(R.id.playerSelectionDestination)}
         playCV.setOnClickListener{ navigateToPlay() }
         rankingCV.setOnClickListener{ navController.navigate(R.id.rankingDestination) }
         playerCV.setOnClickListener { navController.navigate(R.id.playerSelectionDestination) }

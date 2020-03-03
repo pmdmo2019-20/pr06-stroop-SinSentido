@@ -5,11 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import es.iessaladillo.pedrojoya.stroop.R
 import es.iessaladillo.pedrojoya.stroop.database.Player
-import es.iessaladillo.pedrojoya.stroop.ui.assistant.AssistantFragmentAdapter
 import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerSelectionAdapter.ViewHolder
 import kotlinx.android.extensions.LayoutContainer
 

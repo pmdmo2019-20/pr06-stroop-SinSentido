@@ -35,6 +35,8 @@ class GameFragment : Fragment(R.layout.game_fragment) {
     var playerId: Int = 0
     var time: String = ""
     var gameModeName: String = ""
+    var wordTime: String = ""
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -43,11 +45,12 @@ class GameFragment : Fragment(R.layout.game_fragment) {
 
     private fun setupViews(view: View){
         playerId = settings.getInt(getString(R.string.selected_player_key), 0)
-        time = settings.getString(getString(R.string.prefGameTime_key), R.string.prefGameTime_defaultValue.toString())!!
-        gameModeName = settings.getString(getString(R.string.prefGameMode_key), R.string.prefGameMode_defaultValue.toString())!!
+        time = settings.getString(getString(R.string.prefGameTime_key), getString(R.string.prefGameTime_defaultValue))!!
+        gameModeName = settings.getString(getString(R.string.prefGameMode_key), getString(R.string.prefGameMode_defaultValue))!!
+        wordTime = settings.getString(getString(R.string.prefWordTime_key), getString(R.string.prefWordTime_defaultValue))!!
 
-        setupGame()
         observers()
+        setupGame()
         setupButtons()
     }
 
@@ -109,9 +112,6 @@ class GameFragment : Fragment(R.layout.game_fragment) {
 
     private fun setupGame(){
         gameMode()
-
-        var wordTime: String = settings.getString(getString(R.string.prefWordTime_key), R.string.prefWordTime_defaultValue.toString())!!
-
         progressBar.max = time.toInt()
         viewModel.startGameThread(time.toInt(), wordTime.toInt())
     }

@@ -8,18 +8,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import es.iessaladillo.pedrojoya.stroop.R
+import kotlinx.android.extensions.LayoutContainer
 
-class AssistantFragmentAdapter: RecyclerView.Adapter<AssistantFragmentAdapter.ViewHolder>() {
+class AssistantAdapter: RecyclerView.Adapter<AssistantAdapter.ViewHolder>() {
+
+    private var onItemClickListener: AssistantAdapter.OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(R.layout.assistant_main_item, parent, false)
         return ViewHolder(itemView)
+    }
+
+    fun setOnItemClickListener(listener: AssistantAdapter.OnItemClickListener){
+        onItemClickListener = listener
     }
 
     override fun getItemCount(): Int = 8
@@ -28,15 +32,18 @@ class AssistantFragmentAdapter: RecyclerView.Adapter<AssistantFragmentAdapter.Vi
         holder.bind(position)
     }
 
+    inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer{
+        val assistantCV: CardView = containerView.findViewById(R.id.assistantCV)
+        val imgAssistant: ImageView = containerView.findViewById(R.id.imgAssistant)
+        val lblAssistant: TextView = containerView.findViewById(R.id.lblAssistant)
+        val btnFinishAssistant: Button = containerView.findViewById(R.id.btnFinishAssistant)
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val assistantCV: CardView = itemView.findViewById(R.id.assistantCV)
-        val imgAssistant: ImageView = itemView.findViewById(R.id.imgAssistant)
-        val lblAssistant: TextView = itemView.findViewById(R.id.lblAssistant)
-        val btnFinishAssistant: Button = itemView.findViewById(R.id.btnFinishAssistant)
+        init {
+            btnFinishAssistant.setOnClickListener{ onItemClickListener?.onClick() }
+        }
 
         fun bind (position: Int){
-            btnFinishAssistant.setOnClickListener{ }
+
             when(position){
                 0 -> paintAssistantStroop()
                 1 -> paintAssistantPlay()
@@ -104,5 +111,9 @@ class AssistantFragmentAdapter: RecyclerView.Adapter<AssistantFragmentAdapter.Vi
             lblAssistant.setText(R.string.assistant_finishDescription)
             btnFinishAssistant.isVisible = true;
         }
+    }
+
+    interface OnItemClickListener{
+        fun onClick()
     }
 }

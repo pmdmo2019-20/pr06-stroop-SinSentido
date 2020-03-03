@@ -50,6 +50,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/assistant_btnFinish"
+                android:background="@android:color/transparent"
+                android:textColor="@color/white"
+                android:layout_margin="@dimen/main_margin_2x"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:visibility="invisible"/>
