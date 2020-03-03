@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface PlayerDao {
@@ -15,4 +16,7 @@ interface PlayerDao {
 
     @Query("SELECT * FROM player WHERE userId = :id")
     fun queryPlayerById(id: Int): Player
+
+    @Update
+    fun updatePlayer(player: Player)
 }

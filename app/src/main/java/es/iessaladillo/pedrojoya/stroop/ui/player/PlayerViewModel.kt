@@ -13,8 +13,14 @@ class PlayerViewModel(val playerDao: PlayerDao): ViewModel() {
 
     fun insertPlayer(avatarId: Int, nickname: String){
         thread {
-            playerDao.insertPlayer(Player(0, nickname, avatarId))
-            queryAllPlayers()
+            try {
+                playerDao.insertPlayer(Player(0, nickname, avatarId))
+                queryAllPlayers()
+            }
+            catch (e: Exception){
+
+            }
+
         }
     }
 
@@ -28,5 +34,9 @@ class PlayerViewModel(val playerDao: PlayerDao): ViewModel() {
 
     fun returnAllPlayers(): List<Player> {
         return playerDao.queryAllPlayers()
+    }
+
+    fun updatePlayer(player: Player){
+        playerDao.updatePlayer(player)
     }
 }

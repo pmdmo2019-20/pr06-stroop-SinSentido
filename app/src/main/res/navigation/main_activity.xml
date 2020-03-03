@@ -48,4 +48,8 @@
         android:id="@+id/resultDestination"
         android:name="es.iessaladillo.pedrojoya.stroop.ui.result.ResultFragment"
         android:label="@string/game_result_title" />
+    <fragment
+        android:id="@+id/playerEditDestination"
+        android:name="es.iessaladillo.pedrojoya.stroop.ui.player.PlayerEditFragment"
+        android:label="@string/player_edition_title" />
 </navigation>

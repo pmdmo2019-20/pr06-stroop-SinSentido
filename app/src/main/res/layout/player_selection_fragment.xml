@@ -54,6 +54,15 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgPlayerSelected" />
+
+            <Button
+                android:id="@+id/btnEditPlayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_selection_btnEdit"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
