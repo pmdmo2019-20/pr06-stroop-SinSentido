@@ -11,8 +11,8 @@ data class Game(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "gameId")
     val gameId: Int,
-    @Embedded
-    val player: Player,
+    @ColumnInfo(name = "playerId")
+    val playerId: Int,
     @ColumnInfo(name= "gameMode")
     var gameMode: String,
     @ColumnInfo(name = "time")

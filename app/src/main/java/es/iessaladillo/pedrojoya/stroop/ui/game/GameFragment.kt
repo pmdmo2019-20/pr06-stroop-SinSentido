@@ -89,7 +89,7 @@ class GameFragment : Fragment(R.layout.game_fragment) {
                 if(isFinishedObserve.value!!){
                     thread {
                         viewModel.insertGame(Game(0,
-                            viewModel.queryPlayerById(playerId),
+                            playerId,
                             gameModeName,
                             time.toInt(),
                             wordsObserve.value!!,

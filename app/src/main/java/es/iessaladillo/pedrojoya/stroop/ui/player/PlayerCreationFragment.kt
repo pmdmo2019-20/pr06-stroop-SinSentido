@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 
@@ -23,8 +25,13 @@ class PlayerCreationFragment : Fragment(R.layout.player_creation_fragment), Play
     private val viewModel: PlayerViewModel by viewModels {
         PlayerViewModelFactory(AppDatabase.getInstance(requireContext()).playerDao)
     }
+
     val listAdapter: PlayerCreationAdapter = PlayerCreationAdapter().also {
         it.setOnItemClickListener(this)
+    }
+
+    private val navController: NavController by lazy{
+        findNavController()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -33,9 +40,16 @@ class PlayerCreationFragment : Fragment(R.layout.player_creation_fragment), Play
     }
 
     private fun setupViews(view: View){
-        fabCreatePlayer.setOnClickListener{ viewModel.insertPlayer(avatarId, txtNicknameCreation.text.toString()) }
+        fabCreatePlayer.setOnClickListener{ createNewPlayer() }
         setupToolbar()
         setupRecyclerView()
+    }
+
+    private fun createNewPlayer(){
+        if(avatarId != 0 && txtNicknameCreation.text.toString() != ""){
+            viewModel.insertPlayer(avatarId, txtNicknameCreation.text.toString())
+            activity!!.onBackPressed()
+        }
     }
 
 

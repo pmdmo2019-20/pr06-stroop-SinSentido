@@ -58,6 +58,7 @@ class PlayerEditFragment : Fragment(R.layout.player_edit_fragment), PlayerEditAd
     private fun updateUser(){
         if(txtNicknameEdit.text.toString() != "" && avatarId != 0){
             viewModel.updatePlayer(Player(playerId, txtNicknameEdit.text.toString(), avatarId))
+            activity!!.onBackPressed()
         }
     }
 

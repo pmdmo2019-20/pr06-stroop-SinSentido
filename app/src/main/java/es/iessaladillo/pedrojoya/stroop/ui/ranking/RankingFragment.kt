@@ -5,31 +5,22 @@ import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.LinearLayout
-import android.widget.Spinner
 import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import es.iessaladillo.pedrojoya.stroop.R
 import es.iessaladillo.pedrojoya.stroop.base.OnToolbarAvailableListener
 import es.iessaladillo.pedrojoya.stroop.database.AppDatabase
 import es.iessaladillo.pedrojoya.stroop.database.Game
-import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerSelectionAdapter
-import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerViewModel
-import es.iessaladillo.pedrojoya.stroop.ui.player.PlayerViewModelFactory
-import kotlinx.android.synthetic.main.dashboard_fragment.*
+import es.iessaladillo.pedrojoya.stroop.database.GamePlayer
 import kotlinx.android.synthetic.main.dashboard_fragment.toolbar
-import kotlinx.android.synthetic.main.player_selection_fragment.*
 import kotlinx.android.synthetic.main.ranking_fragment.*
 
 class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnItemClickListener {
@@ -118,9 +109,9 @@ class RankingFragment : Fragment(R.layout.ranking_fragment), RankingAdapter.OnIt
         dialog.show()
     }
 
-    override fun onClick(game: Game) {
+    override fun onClick(gamePlayer: GamePlayer) {
         settings.edit{
-            putInt(getString(R.string.current_game_key), game.gameId)
+            putInt(getString(R.string.current_game_key), gamePlayer.game.gameId)
         }
         navController.navigate(R.id.resultDestination)
     }
